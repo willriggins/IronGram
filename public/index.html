@@ -1,0 +1,26 @@
+<html>
+<body>
+
+<div id="notLoggedIn">
+    <input type="text" placeholder="name" id="username"/>
+    <input type="password" placeholder="password" id="password"/>
+    <button onclick="login()">Log in</button>
+</div>
+<!-- need that id up above so we can reach it from js-->
+
+
+<div id="loggedIn">
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" />
+        <input type="text" name="receiver" placeholder="Receiver name"/>
+        <button type="submit">Upload</button>
+    </form>
+    <div id="photos">
+
+    </div>
+</div>
+
+<script src="jquery-3.0.0.js"></script>
+<script src="main.js"></script>
+</body>
+</html>
