@@ -9,4 +9,6 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface PhotoRepository extends CrudRepository<Photo, Integer>{
     public Iterable<Photo> findByRecipient(User receiver);
+    public Iterable<Photo> findByOrderByIdAsc();
+    public Iterable<Photo> findBySenderAndPub(User sender, boolean pub);
 }

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.time.LocalDateTime;
 
 /**
  * Created by will on 6/28/16.
@@ -47,13 +49,33 @@ public class IronGramRestController {
 
     @RequestMapping(path = "/photos", method = RequestMethod.GET)
     public Iterable<Photo> getPhotos(HttpSession session) {
-        //only passing session so we know who is logged in
-        //need to find out who is logged in, find user object, then use method we wrote in PhotoRepo
         String username = (String) session.getAttribute("username");
         User user = users.findFirstByName(username);
+
+        LocalDateTime time = LocalDateTime.now();
+        Iterable<Photo> allPhotos = photos.findByRecipient(user);
+
+        for (Photo photo : allPhotos) {
+            if (photo.getTime() == null) {
+                photo.setTime(LocalDateTime.now());
+                photos.save(photo);
+            }
+
+            if (time.isAfter(photo.getTime().plusSeconds(photo.getDuration()))) {
+                photos.delete(photo);
+                File f = new File("public/photos/" + photo.getFilename());
+                f.delete();
+            }
+        }
         return photos.findByRecipient(user);
+    }
 
+    @RequestMapping(path = "/public-photos", method = RequestMethod.GET)
+    public Iterable<Photo> getPublicPhotos(HttpSession session) {
+        String username = (String) session.getAttribute("username");
+        User user = users.findFirstByName(username);
 
+        return photos.findBySenderAndPub(user, true);
     }
 
 
