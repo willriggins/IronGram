@@ -59,18 +59,16 @@ public class IronGramController {
         File dir = new File("public/photos");
         dir.mkdirs();
 
-        /** not secure.. but couldn't find anything in the docs for this. could improve by making this look at the
-        * final column in the string array instead of just the 2nd column.
-         */
         String fileStr = file.getOriginalFilename();
         String[] columns = fileStr.split("\\.");
         String fileType = columns[1];
 
-
+        // use getContentType.contains("image")
         if (fileType.equals("jpg")) {
             File photoFile = File.createTempFile("photo", file.getOriginalFilename(), dir); // prefix and suffix.. then directory --read about this
             FileOutputStream fos = new FileOutputStream(photoFile);
             fos.write(file.getBytes());
+
 
             Photo photo = new Photo(sender, rec, photoFile.getName(), duration, isPublic);
             photos.save(photo);
@@ -81,7 +79,6 @@ public class IronGramController {
 
         return "redirect:/";
     }
-
 //        if (LocalTime.now() == timeExpire) {
 //            LocalDateTime time = LocalDateTime.now();
 //            photos.delete(photo)
