@@ -3,6 +3,7 @@ function getPhotos() {
         "type": "GET",
         "url": "/photos",
         "success": function(data) {
+          $("#photos").empty();
             for (var i in data) {
                 var elem = $("<img>");
                 elem.attr("src", "photos/" + data[i].filename);
@@ -31,4 +32,27 @@ function login() {
     });
 }
 
-$("#loggedIn").hide();
+function logout() {
+  $.ajax({
+    "type": "POST",
+    "url": "/logout",
+    "success": function() {
+      $("#notLoggedIn").show();
+      $("#loggedIn").hide();
+    }
+  })
+}
+
+$.ajax({
+  "type": "GET",
+  "url": "/user",
+  "success": function(data) {
+    if (data) {
+      $("#notLoggedIn").hide();
+      getPhotos();
+    }
+    else {
+      $("#loggedIn").hide();
+    }
+  }
+});
